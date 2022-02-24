@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Country } from './dto/Country'
 import * as CountriesService from './services/CountryService'
 
@@ -8,6 +8,8 @@ export const App: FunctionComponent<Props> = props => {
     const [countries, setCounrties] = useState<Country[]>([])
     const [page, setPage] = useState<number>(1)
     const [size, setSize] = useState<number>(20)
+
+    const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const pageCount = useMemo<number>(
         () => (countries.length % size === 0 ? countries.length / size : Math.floor(countries.length / size) + 1),
@@ -20,6 +22,19 @@ export const App: FunctionComponent<Props> = props => {
 
     const prevPageHandler = useCallback(() => {
         setPage(page => page - 1)
+    }, [])
+
+    const pointerDownEventHandler = useCallback(event => {
+        longPressTimeoutId.current = setTimeout(() => {
+            alert(event.target.dataset.code)
+        }, 3000)
+    }, [])
+
+    const pointerOutEventHandler = useCallback(() => {
+        if (longPressTimeoutId.current !== null) {
+            clearTimeout(longPressTimeoutId.current)
+            longPressTimeoutId.current = null
+        }
     }, [])
 
     useEffect(() => {
@@ -40,7 +55,15 @@ export const App: FunctionComponent<Props> = props => {
                 </button>
             </div>
             {countries.slice((page - 1) * size, (page - 1) * size + size).map(country => (
-                <div key={country?.capitalName + country.name}>{country.capitalName}</div>
+                <div
+                    key={country.code}
+                    data-code={country.code}
+                    onPointerDown={pointerDownEventHandler}
+                    onPointerLeave={pointerOutEventHandler}
+                    onPointerUp={pointerOutEventHandler}
+                >
+                    {country.capitalName} - {country.code}
+                </div>
             ))}
         </div>
     )

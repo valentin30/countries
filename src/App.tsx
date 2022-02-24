@@ -1,26 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FunctionComponent, useContext, useEffect } from 'react'
+import { CounrtiesContext } from './context/countries/CountriesContext'
+import * as CountriesService from './services/CountryService'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {}
+
+export const App: FunctionComponent<Props> = props => {
+    const { counrties, setCounrties } = useContext(CounrtiesContext)
+
+    useEffect(() => {
+        CountriesService.getAllCountries().then(setCounrties)
+    }, [setCounrties])
+
+    return <div>{counrties}</div>
 }
-
-export default App;

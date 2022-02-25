@@ -1,0 +1,128 @@
+.tick-loader {
+    position: relative;
+    border-radius: 50%;
+    border: none;
+    box-sizing: border-box;
+
+    &.tiny {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    &.small {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    &.regular {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    &.big {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    &.huge {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border: 3px solid transparent;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        transform: rotate(15deg);
+    }
+
+    &::before {
+        border-top-color: transparent;
+        transition-property: transform, border-top-color;
+        transition-duration: 300ms, 0ms;
+        transition-timing-function: linear;
+        transition-delay: 200ms, 425ms;
+    }
+
+    &::after {
+        transition-property: border-left-color, border-bottom-color, border-right-color;
+        transition-duration: 0ms;
+        transition-timing-function: linear;
+        transition-delay: 275ms, 350ms, 425ms;
+    }
+
+    &__tick {
+        position: absolute;
+        width: 30%;
+        height: 70%;
+        top: 25%;
+        right: 7%;
+        transform-origin: top right;
+        transform: rotate(45deg);
+        box-sizing: border-box;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            background-color: green;
+            box-sizing: border-box;
+        }
+
+        &::before {
+            width: 3px;
+            height: 100%;
+            right: 0;
+            transform-origin: top;
+            transform: scaleY(0);
+            transition: transform 125ms linear 50ms;
+        }
+
+        &::after {
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            transform-origin: right;
+            transform: scaleX(0);
+            transition: transform 75ms linear 0ms;
+        }
+    }
+
+    &.loading {
+        &::before {
+            border-top-color: green;
+            transform: rotate(375deg);
+            transition: transform 2000ms linear 0ms;
+        }
+
+        &::after {
+            border-right-color: green;
+            border-bottom-color: green;
+            border-left-color: green;
+
+            transition-property: border-right-color, border-bottom-color, border-left-color;
+            transition-delay: 500ms, 1000ms, 1500ms;
+            transition-duration: 0ms;
+            transition-timing-function: linear;
+        }
+
+        .tick-loader__tick {
+            &::before {
+                transform: scaleY(1);
+                transition-delay: 2000ms;
+                transition-duration: 350ms;
+            }
+
+            &::after {
+                transform: scaleX(1);
+                transition-delay: 2350ms;
+                transition-duration: 150ms;
+            }
+        }
+    }
+}

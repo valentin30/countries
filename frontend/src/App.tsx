@@ -1,4 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Loader } from './components/Loader'
 import { Country } from './dto/Country'
 import * as CountriesService from './services/CountryService'
 
@@ -8,6 +9,7 @@ export const App: FunctionComponent<Props> = props => {
     const [countries, setCounrties] = useState<Country[]>([])
     const [page, setPage] = useState<number>(1)
     const [size, setSize] = useState<number>(20)
+    const [loading, setLoading] = useState(false)
 
     const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -25,14 +27,16 @@ export const App: FunctionComponent<Props> = props => {
     }, [])
 
     const pointerDownEventHandler = useCallback(event => {
+        setLoading(true)
         longPressTimeoutId.current = setTimeout(() => {
             alert(event.target.dataset.code)
-        }, 3000)
+        }, 2500)
     }, [])
 
     const pointerOutEventHandler = useCallback(() => {
         if (longPressTimeoutId.current !== null) {
             clearTimeout(longPressTimeoutId.current)
+            setLoading(false)
             longPressTimeoutId.current = null
         }
     }, [])
@@ -53,6 +57,7 @@ export const App: FunctionComponent<Props> = props => {
                 <button disabled={page <= 1} onClick={prevPageHandler}>
                     prev
                 </button>
+                <Loader loading={loading} size='huge' />
             </div>
             {countries.slice((page - 1) * size, (page - 1) * size + size).map(country => (
                 <div

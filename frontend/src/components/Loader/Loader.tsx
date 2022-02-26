@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import './Loader.scss'
 
 interface Props {
@@ -6,12 +6,10 @@ interface Props {
     size?: 'tiny' | 'small' | 'big' | 'huge'
 }
 
-export const Loader: FunctionComponent<Props> = props => {
+export const Loader: FunctionComponent<Props> = ({ size = 'regular', loading }) => {
     return (
-        <div>
-            <div className={`tick-loader${props.loading ? ' loading' : ''} ${props.size ? props.size : 'regular'}`}>
-                <div className='tick-loader__tick'></div>
-            </div>
+        <div className={`tick-loader${loading ? ' loading' : ''} ${size}`}>
+            <div className='tick-loader__tick'></div>
         </div>
     )
 }

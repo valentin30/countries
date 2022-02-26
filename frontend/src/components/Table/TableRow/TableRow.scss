@@ -1,0 +1,50 @@
+.table-row {
+    border-bottom: 1px solid #b9b9b9;
+    height: 3.5rem;
+
+    td,
+    th {
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    img {
+        width: 100%;
+        display: block;
+    }
+
+    .table-row__loader {
+        padding-right: 0;
+        width: 1.5rem;
+    }
+
+    .table-row__code,
+    .table-row__flag {
+        width: 1.5rem;
+        text-align: center;
+    }
+
+    .table-row__name,
+    .table-row__capital,
+    .table-row__population {
+        white-space: normal;
+    }
+
+    .table-row__name {
+        width: 18rem;
+    }
+
+    .table-row__capital,
+    .table-row__region {
+        width: 10rem;
+    }
+
+    .table-row__population {
+        text-align: right;
+        width: 7rem;
+    }
+
+    .table-row__subregion {
+        width: 15rem;
+    }
+}

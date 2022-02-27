@@ -57,7 +57,6 @@ const Base = () => {
                     <BsCloudMoon className='theme-switcher__dark' />
                 </div>
             </button>
-            <Outlet />
             {!!country && <Detail country={country} onClose={() => setActive(null)} />}
             <Table
                 code={active}

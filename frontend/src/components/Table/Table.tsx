@@ -88,9 +88,18 @@ export const Table: FunctionComponent<Props> = props => {
     }, [])
 
     const sizeCahngeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(event => {
-        setSize(+event.target.value)
         params.set('size', event.target.value)
-        navigate(`${window.location.pathname}?${params.toString()}`)
+        setSize(size => {
+            const newSize = +event.target.value
+            setPage(page => {
+                const to = size * page
+                const newPage = Math.floor(to / newSize) || 1
+                params.set('page', `${newPage}`)
+                navigate(`${window.location.pathname}?${params.toString()}`)
+                return newPage
+            })
+            return newSize
+        })
     }, [])
 
     useEffect(() => {

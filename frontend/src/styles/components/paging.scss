@@ -41,7 +41,7 @@
             width: 3.25rem;
             padding: 0.35rem;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             background: transparent;
             border: 2px solid var(--accent-color);
             outline: none;

@@ -1,13 +1,27 @@
-import { FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 
 interface Props {
     name: string
     header?: boolean
+    image?: boolean
+    src?: string
+    alt?: string
+    children?: React.ReactNode
 }
 
-export const TableCell: FunctionComponent<Props> = props => {
-    if (props.header) {
-        return <th className={`table-row__${props.name}`}>{props.name}</th>
+const TableCellComponent: FunctionComponent<Props> = props => {
+    if (props.image) {
+        return (
+            <div className={`table__cell ${props.name}`}>
+                <img src={props.src} alt={props.alt} />
+            </div>
+        )
     }
-    return <td className={`table-row__${props.name}`}>{props.children}</td>
+    if (props.header) {
+        return <div className={`table__cell ${props.name}`}>{props.name}</div>
+    }
+    return <div className={`table__cell ${props.name}`}>{props.children}</div>
 }
+
+export const TableCell = React.memo(TableCellComponent)
+// export const TableCell = TableCellComponent

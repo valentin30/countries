@@ -1,39 +1,61 @@
-import React, { FunctionComponent, PointerEventHandler, useCallback, useRef, useState } from 'react'
+import React, {
+    ChangeEventHandler,
+    FunctionComponent,
+    PointerEventHandler,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from 'react'
 import { Country } from '../../dto/Country'
 import { TableHeader } from './TableHeader'
 import { TableRow } from './TableRow'
 import { Columns } from './types'
-import './Table.scss'
+import { Pager } from '../Paging'
+import { PageSizer } from '../Paging/PageSizer'
+import { useLocation, useNavigate } from 'react-router'
 
 interface Props {
     countries: Country[]
     columns: Columns
-    onLongPress: (code: string) => void
-    onLongPressCancel: PointerEventHandler
+    code: string | null
+    onLongPressSuccess: (code: string) => void
+    onLongPressFail: PointerEventHandler
 }
 
+const options = [5, 10, 15, 25, 50]
+
+const params = new URLSearchParams(window.location.search)
+
 export const Table: FunctionComponent<Props> = props => {
-    const [activeCode, setActiveCode] = useState<string | null>(null)
+    const navigate = useNavigate()
+    const [page, setPage] = useState<number>(+(params.get('page') ?? 1))
+    const [size, setSize] = useState<number>(+(params.get('size') ?? 5))
+    const [active, setActive] = useState<string | null>(null)
+    const tableBodyRef = useRef<HTMLDivElement | null>(null)
     const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
     const longPressDebounceTimerId = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const { onLongPress, onLongPressCancel } = props
 
-    const pointerDownEventHandler = useCallback<PointerEventHandler>(
+    const { onLongPressSuccess, onLongPressFail, countries, code } = props
+    const data = useMemo(() => countries.slice((page - 1) * size, (page - 1) * size + size), [countries, page, size])
+
+    const longPressHandler = useCallback<PointerEventHandler>(
         event => {
             if (event.button === 0 && event.buttons === 1) {
                 // For Chrome, Brave and Firefox event.button === 0 and event.buttons === 1 only on left click
                 longPressDebounceTimerId.current = setTimeout(() => {
-                    setActiveCode(event.target.closest('tr').dataset.code)
+                    setActive(event.target.closest('.table__row').dataset.code)
                     longPressTimeoutId.current = setTimeout(() => {
-                        onLongPress(event.target.closest('tr').dataset.code)
+                        onLongPressSuccess(event.target.closest('.table__row').dataset.code)
                     }, 2500)
                 }, 500)
             }
         },
-        [onLongPress]
+        [onLongPressSuccess]
     )
 
-    const pointerOutEventHandler = useCallback<PointerEventHandler>(
+    const longPressFailHandler = useCallback<PointerEventHandler>(
         event => {
             if (longPressDebounceTimerId.current !== null) {
                 clearTimeout(longPressDebounceTimerId.current)
@@ -42,30 +64,72 @@ export const Table: FunctionComponent<Props> = props => {
             if (longPressTimeoutId.current !== null) {
                 clearTimeout(longPressTimeoutId.current)
                 longPressTimeoutId.current = null
-                setActiveCode(null)
-                onLongPressCancel(event)
+                setActive(null)
+                onLongPressFail(event)
             }
         },
-        [onLongPressCancel]
+        [onLongPressFail]
     )
+
+    const nextPageHandler = useCallback(() => {
+        setPage(page => {
+            params.set('page', `${page + 1}`)
+            navigate(`${window.location.pathname}?${params.toString()}`)
+            return page + 1
+        })
+    }, [])
+
+    const prevPageHandler = useCallback(() => {
+        setPage(page => {
+            params.set('page', `${page - 1}`)
+            navigate(`${window.location.pathname}?${params.toString()}`)
+            return page - 1
+        })
+    }, [])
+
+    const sizeCahngeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(event => {
+        setSize(+event.target.value)
+        params.set('size', event.target.value)
+        navigate(`${window.location.pathname}?${params.toString()}`)
+    }, [])
+
+    useEffect(() => {
+        if (tableBodyRef.current.scrollTop !== 0) {
+            tableBodyRef.current.firstChild.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [page])
 
     return (
         <div className='table'>
-            <table>
+            <div className='table__x-scroll-container'>
                 <TableHeader columns={props.columns} />
-                <tbody>
-                    {props.countries.map(country => (
+                <div ref={tableBodyRef} className='table__body'>
+                    {data.map(country => (
                         <TableRow
                             key={country.code}
                             country={country}
-                            onLongPress={pointerDownEventHandler}
-                            onLongPressCancel={pointerOutEventHandler}
-                            loading={country.code === activeCode}
+                            onLongPress={longPressHandler}
+                            onLongPressFail={longPressFailHandler}
+                            loading={country.code === active || country.code === code}
                             columns={props.columns}
                         />
                     ))}
-                </tbody>
-            </table>
+                </div>
+            </div>
+            <div className='table__footer'>
+                <div className='table__row'>
+                    <div className='table__paging'>
+                        <PageSizer selected={size} options={options} onChange={sizeCahngeHandler} />
+                        <Pager
+                            page={page}
+                            count={size}
+                            totalCount={countries.length}
+                            onBack={prevPageHandler}
+                            onNext={nextPageHandler}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

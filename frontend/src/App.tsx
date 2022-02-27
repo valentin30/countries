@@ -1,8 +1,12 @@
-import { FunctionComponent, PointerEventHandler, useCallback, useEffect, useMemo, useState } from 'react'
+import { FunctionComponent, PointerEventHandler, useEffect, useState } from 'react'
 import { Table } from './components/Table'
 import { Columns } from './components/Table/types'
 import { Country } from './dto/Country'
 import * as CountriesService from './services/CountryService'
+import { IoMdClose } from 'react-icons/io'
+import { BsCloudMoon, BsCloudSun } from 'react-icons/bs'
+import { Route, Routes, Outlet, useNavigate } from 'react-router'
+import { Detail } from './components/Detail'
 
 interface Props {}
 
@@ -19,55 +23,49 @@ const columns: Columns = {
 }
 
 export const App: FunctionComponent<Props> = props => {
-    const [countries, setCounrties] = useState<Country[]>([])
-    const [page, setPage] = useState<number>(1)
-    const [size, setSize] = useState<number>(5)
-    const [active, setActive] = useState<string>('')
-
-    const pageCount = useMemo<number>(
-        () => (countries.length % size === 0 ? countries.length / size : Math.floor(countries.length / size) + 1),
-        [countries.length, size]
+    return (
+        <Routes>
+            <Route path='/*' element={<Base />} />
+        </Routes>
     )
+}
 
-    const nextPageHandler = useCallback(() => {
-        setPage(page => page + 1)
-    }, [])
-
-    const prevPageHandler = useCallback(() => {
-        setPage(page => page - 1)
-    }, [])
+const Base = () => {
+    const [countries, setCounrties] = useState<Country[]>([])
+    const [active, setActive] = useState<string>('')
 
     useEffect(() => {
         CountriesService.getAllCountries().then(setCounrties)
     }, [])
 
-    const data = useMemo(() => {
-        return countries.slice((page - 1) * size, (page - 1) * size + size)
-    }, [countries, page, size])
+    const country = countries.find(c => c.code === active)
 
-    const filters = countries.reduce(
-        (filters, country) => {
-            if (!filters.regions.includes(country.region)) filters.regions.push(country.region)
-            if (!filters.subregions.includes(country.subregion)) filters.subregions.push(country.subregion)
-            return filters
-        },
-        { regions: [] as string[], subregions: [] as string[] }
-    )
+    const [theme, setTheme] = useState<string>(localStorage.getItem('theme'))
 
+    useEffect(() => {
+        localStorage.setItem('theme', theme)
+    }, [theme])
     return (
-        <div>
-            <div>
-                <p>
-                    page: {page} - {pageCount} - ({active})
-                </p>
-                <button disabled={page >= pageCount} onClick={nextPageHandler}>
-                    next
-                </button>
-                <button disabled={page <= 1} onClick={prevPageHandler}>
-                    prev
-                </button>
-            </div>
-            <Table columns={columns} countries={data} onLongPress={setActive} onLongPressCancel={failure} />
+        <div className={`theme-switcher ${theme}`}>
+            <button
+                aria-label='Theme switcher'
+                className='theme-switcher__button'
+                onClick={() => setTheme(t => (t === 'dark-theme' ? 'light-theme' : 'dark-theme'))}
+            >
+                <div className='theme-switcher__icon-container'>
+                    <BsCloudSun className='theme-switcher__light' />
+                    <BsCloudMoon className='theme-switcher__dark' />
+                </div>
+            </button>
+            <Outlet />
+            {!!country && <Detail country={country} onClose={() => setActive(null)} />}
+            <Table
+                code={active}
+                columns={columns}
+                countries={countries}
+                onLongPressFail={failure}
+                onLongPressSuccess={setActive}
+            />
         </div>
     )
 }

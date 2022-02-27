@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react'
-import './Loader.scss'
 
 interface Props {
     loading: boolean

@@ -9,21 +9,21 @@ interface Props {
     columns: Columns
     loading: boolean
     onLongPress: PointerEventHandler
-    onLongPressCancel: PointerEventHandler
+    onLongPressFail: PointerEventHandler
 }
 
 export const TableRowComponent: FunctionComponent<Props> = props => {
     return (
-        <tr
+        <div
             data-code={props.country.code}
             onPointerDown={props.onLongPress}
-            onPointerLeave={props.onLongPressCancel}
-            onPointerUp={props.onLongPressCancel}
-            className='table-row'
+            onPointerLeave={props.onLongPressFail}
+            onPointerUp={props.onLongPressFail}
+            className='table__row'
         >
-            <td className='table-row__loader'>
+            <div className='table__cell loader'>
                 <Loader loading={props.loading} size='small' />
-            </td>
+            </div>
             {TableColumsArray.map(key => {
                 if (!props.columns[key]) {
                     return null
@@ -31,9 +31,7 @@ export const TableRowComponent: FunctionComponent<Props> = props => {
                 switch (key) {
                     case TableColumns.FLAG:
                         return (
-                            <TableCell key={key} name={key}>
-                                <img src={props.country.flag} alt={props.country.code} />
-                            </TableCell>
+                            <TableCell key={key} name={key} src={props.country.flag} alt={props.country.code} image />
                         )
                     case TableColumns.CAPITAL:
                         return (
@@ -49,8 +47,9 @@ export const TableRowComponent: FunctionComponent<Props> = props => {
                         )
                 }
             })}
-        </tr>
+        </div>
     )
 }
 
 export const TableRow = React.memo(TableRowComponent)
+// export const TableRow = TableRowComponent

@@ -2,14 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { App } from './App'
 import { CounrtiesContextProvider } from './context/countries/CountriesContext'
-import './index.css'
+import './styles/index.scss'
 import reportWebVitals from './reportWebVitals'
+import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.render(
     <React.StrictMode>
-        <CounrtiesContextProvider>
+        <BrowserRouter>
             <App />
-        </CounrtiesContextProvider>
+        </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
 )

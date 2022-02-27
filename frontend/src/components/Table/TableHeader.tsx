@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react'
+import React, { FunctionComponent } from 'react'
 import { TableCell } from './TableCell'
 import { Columns, TableColumsArray } from './types'
 
@@ -7,23 +7,20 @@ interface Props {
 }
 
 const TableHeaderComponent: FunctionComponent<Props> = props => {
-    useEffect(() => {
-        console.log('UPDATE - TABLE HEAER COMPONENT')
-    })
-
     return (
-        <thead>
-            <tr className='table-row'>
-                <th className='table-row__loader'></th>
+        <div className='table__header'>
+            <div className='table__row'>
+                <div className='table__cell loader'></div>
                 {TableColumsArray.map(key => {
                     if (!props.columns[key]) {
                         return null
                     }
                     return <TableCell key={key} name={key} header />
                 })}
-            </tr>
-        </thead>
+            </div>
+        </div>
     )
 }
 
 export const TableHeader = React.memo(TableHeaderComponent)
+// export const TableHeader = TableHeaderComponent

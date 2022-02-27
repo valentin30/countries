@@ -70,7 +70,7 @@
         &::after {
             content: '';
             position: absolute;
-            background-color: #33eb91;
+            background-color: var(--accent-color);
             box-sizing: border-box;
         }
 
@@ -95,15 +95,15 @@
 
     &.loading {
         &::before {
-            border-top-color: #33eb91;
+            border-top-color: var(--accent-color);
             transform: rotate(375deg);
             transition: transform 2000ms linear 0ms;
         }
 
         &::after {
-            border-right-color: #33eb91;
-            border-bottom-color: #33eb91;
-            border-left-color: #33eb91;
+            border-right-color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            border-left-color: var(--accent-color);
             transition-property: border-right-color, border-bottom-color, border-left-color;
             transition-delay: 500ms, 1000ms, 1500ms;
             transition-duration: 0ms;

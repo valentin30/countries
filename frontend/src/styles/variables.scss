@@ -11,6 +11,7 @@
         --border-color: #dddddd;
         --scroll-track-color: #fafafa;
         --backdrop-color: rgba(255, 255, 255, 0.5);
+        --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     }
 
     &.dark-theme {
@@ -21,5 +22,6 @@
         --border-color: #121212;
         --scroll-track-color: #000000;
         --backdrop-color: rgba(0, 0, 0, 0.5);
+        --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     }
 }

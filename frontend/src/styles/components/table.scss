@@ -6,8 +6,7 @@
     user-select: none;
     background-color: var(--background-color);
     border-radius: 4px;
-    // box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    box-shadow: var(--shadow);
 
     &__x-scroll-container {
         border-top-left-radius: 4px;

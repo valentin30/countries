@@ -1,12 +1,11 @@
-import { FunctionComponent, PointerEventHandler, useEffect, useState } from 'react'
+import { FunctionComponent, PointerEventHandler, useEffect, useRef, useState } from 'react'
+import { Route, Routes } from 'react-router'
+import { Detail } from './components/Detail'
 import { Table } from './components/Table'
 import { Columns } from './components/Table/types'
+import { ThemeSwitcher } from './components/ThemeSwitch'
 import { Country } from './dto/Country'
 import * as CountriesService from './services/CountryService'
-import { IoMdClose } from 'react-icons/io'
-import { BsCloudMoon, BsCloudSun } from 'react-icons/bs'
-import { Route, Routes, Outlet, useNavigate } from 'react-router'
-import { Detail } from './components/Detail'
 
 interface Props {}
 
@@ -32,7 +31,7 @@ export const App: FunctionComponent<Props> = props => {
 
 const Base = () => {
     const [countries, setCounrties] = useState<Country[]>([])
-    const [active, setActive] = useState<string>('')
+    const [active, setActive] = useState('')
 
     useEffect(() => {
         CountriesService.getAllCountries().then(setCounrties)
@@ -40,23 +39,9 @@ const Base = () => {
 
     const country = countries.find(c => c.code === active)
 
-    const [theme, setTheme] = useState<string>(localStorage.getItem('theme'))
-
-    useEffect(() => {
-        localStorage.setItem('theme', theme)
-    }, [theme])
     return (
-        <div className={`theme-switcher ${theme}`}>
-            <button
-                aria-label='Theme switcher'
-                className='theme-switcher__button'
-                onClick={() => setTheme(t => (t === 'dark-theme' ? 'light-theme' : 'dark-theme'))}
-            >
-                <div className='theme-switcher__icon-container'>
-                    <BsCloudSun className='theme-switcher__light' />
-                    <BsCloudMoon className='theme-switcher__dark' />
-                </div>
-            </button>
+        <div>
+            <ThemeSwitcher />
             {!!country && <Detail country={country} onClose={() => setActive(null)} />}
             <Table
                 code={active}

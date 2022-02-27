@@ -14,7 +14,7 @@ import { TableRow } from './TableRow'
 import { Columns } from './types'
 import { Pager } from '../Paging'
 import { PageSizer } from '../Paging/PageSizer'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 interface Props {
     countries: Country[]
@@ -26,12 +26,11 @@ interface Props {
 
 const options = [5, 10, 15, 25, 50]
 
-const params = new URLSearchParams(window.location.search)
-
 export const Table: FunctionComponent<Props> = props => {
     const navigate = useNavigate()
-    const [page, setPage] = useState<number>(+(params.get('page') ?? 1))
-    const [size, setSize] = useState<number>(+(params.get('size') ?? 5))
+    const params = useRef(new URLSearchParams(window.location.search))
+    const [page, setPage] = useState<number>(+(params.current.get('page') ?? 1))
+    const [size, setSize] = useState<number>(+(params.current.get('size') ?? 5))
     const [active, setActive] = useState<string | null>(null)
     const tableBodyRef = useRef<HTMLDivElement | null>(null)
     const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -71,42 +70,23 @@ export const Table: FunctionComponent<Props> = props => {
         [onLongPressFail]
     )
 
-    const nextPageHandler = useCallback(() => {
-        setPage(page => {
-            params.set('page', `${page + 1}`)
-            navigate(`${window.location.pathname}?${params.toString()}`)
-            return page + 1
-        })
-    }, [])
-
-    const prevPageHandler = useCallback(() => {
-        setPage(page => {
-            params.set('page', `${page - 1}`)
-            navigate(`${window.location.pathname}?${params.toString()}`)
-            return page - 1
-        })
-    }, [])
-
     const sizeCahngeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(event => {
-        params.set('size', event.target.value)
         setSize(size => {
             const newSize = +event.target.value
-            setPage(page => {
-                const to = size * page
-                const newPage = Math.floor(to / newSize) || 1
-                params.set('page', `${newPage}`)
-                navigate(`${window.location.pathname}?${params.toString()}`)
-                return newPage
-            })
+            setPage(page => Math.floor((size * page) / newSize) || 1)
             return newSize
         })
     }, [])
 
     useEffect(() => {
+        params.current.set('page', `${page}`)
+        params.current.set('size', `${size}`)
+        navigate(`${window.location.pathname}?${params.current.toString()}`, { replace: true })
+
         if (tableBodyRef.current.scrollTop !== 0) {
             tableBodyRef.current.firstChild.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [page])
+    }, [page, size])
 
     return (
         <div className='table'>
@@ -133,8 +113,8 @@ export const Table: FunctionComponent<Props> = props => {
                             page={page}
                             count={size}
                             totalCount={countries.length}
-                            onBack={prevPageHandler}
-                            onNext={nextPageHandler}
+                            onBack={() => setPage(page => page - 1)}
+                            onNext={() => setPage(page => page + 1)}
                         />
                     </div>
                 </div>

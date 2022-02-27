@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { App } from './App'
-import { CounrtiesContextProvider } from './context/countries/CountriesContext'
-import './styles/index.scss'
-import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
+import { App } from './App'
+import reportWebVitals from './reportWebVitals'
+import './styles/index.scss'
+import { ThemeSwitch } from './utils/ThemeSwitch'
+
+ThemeSwitch.getInstance().initTheme()
 
 ReactDOM.render(
     <React.StrictMode>

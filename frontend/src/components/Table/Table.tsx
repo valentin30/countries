@@ -12,8 +12,7 @@ import { Country } from '../../dto/Country'
 import { TableHeader } from './TableHeader'
 import { TableRow } from './TableRow'
 import { Columns } from './types'
-import { Pager } from '../Paging'
-import { PageSizer } from '../Paging/PageSizer'
+import { Pager, PageSizer } from '../Paging'
 import { useNavigate } from 'react-router'
 
 interface Props {

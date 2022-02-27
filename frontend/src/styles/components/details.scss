@@ -4,7 +4,7 @@
     right: 0;
     left: 0;
     margin: auto;
-    max-width: 80rem;
+    max-width: var(--max-width);
     width: 90%;
     background-color: var(--background-color);
     border-radius: var(--border-radius);
@@ -73,6 +73,7 @@
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
+        color: var(--text-color);
     }
 
     &__list-item {
@@ -106,6 +107,8 @@
     position: fixed;
     width: 100vw;
     height: 100vh;
+    top: 0;
+    left: 0;
     z-index: 2;
     background-color: var(--backdrop-color);
 }

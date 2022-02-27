@@ -20,7 +20,7 @@ const TableCellComponent: FunctionComponent<Props> = props => {
     if (props.header) {
         return <div className={`table__cell ${props.name}`}>{props.name}</div>
     }
-    return <div className={`table__cell ${props.name}`}>{props.children}</div>
+    return <div className={`table__cell ${props.name}`}>{props.children || 'n/a'}</div>
 }
 
 export const TableCell = React.memo(TableCellComponent)

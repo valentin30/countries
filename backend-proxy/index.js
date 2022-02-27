@@ -11,6 +11,6 @@ const app = express()
 
 app.use(cors())
 
-app.get('/countries', createProxyMiddleware({ target: API_SERVICE_URL, changeOrigin: true }))
+app.use('/countries', createProxyMiddleware({ target: API_SERVICE_URL, changeOrigin: true }))
 
 app.listen(PORT, HOST, () => {})

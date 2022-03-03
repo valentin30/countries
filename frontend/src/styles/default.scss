@@ -24,29 +24,38 @@ button {
     cursor: pointer;
     outline: none;
     border: 2px solid transparent;
+    -webkit-tap-highlight-color: transparent;
     border-radius: var(--border-radius);
     &:focus {
         border-color: var(--accent-color-60);
     }
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
+// ::-webkit-scrollbar {
+//     width: 8px;
+//     height: 8px;
+//     background-color: var(--scroll-track-color);
+// }
 
-/* Track */
-::-webkit-scrollbar-track {
-    background: var(--scroll-track-color);
-}
+// @media (max-width: 1000px) {
+//     ::-webkit-scrollbar {
+//         width: 4px;
+//         height: 4px;
+//     }
+// }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background-color: var(--accent-color-60);
-    border-radius: var(--border-radius);
-}
+// /* Track */
+// ::-webkit-scrollbar-track {
+//     background: var(--scroll-track-color);
+// }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--accent-color-80);
-}
+// /* Handle */
+// ::-webkit-scrollbar-thumb {
+//     background-color: var(--accent-color-60);
+//     border-radius: var(--border-radius);
+// }
+
+// /* Handle on hover */
+// ::-webkit-scrollbar-thumb:hover {
+//     background-color: var(--accent-color-80);
+// }

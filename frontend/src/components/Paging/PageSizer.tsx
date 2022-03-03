@@ -11,7 +11,7 @@ export const PageSizer: FunctionComponent<Props> = props => {
     return (
         <div className='page-sizer'>
             <label className='page-sizer__info' htmlFor='page-size'>
-                Rows on page:
+                Rows:
             </label>
             <div className='page-sizer__select'>
                 <select value={props.selected} onChange={props.onChange} name='page-size' id='page-size'>

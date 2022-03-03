@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import { MdOutlineArrowBackIosNew, MdOutlineArrowForwardIos } from 'react-icons/md'
-import { useLocation } from 'react-router'
 
 interface Props {
     page: number
@@ -16,7 +15,7 @@ export const Pager: FunctionComponent<Props> = props => {
     return (
         <div className='pager'>
             <p className='pager__info'>
-                {from + 1} - {from + props.count} of {props.totalCount}
+                {from + 1} - {to} of {props.totalCount}
             </p>
             <button aria-label='Previous page' onClick={props.onBack} disabled={from === 0} className='pager__previous'>
                 <MdOutlineArrowBackIosNew />

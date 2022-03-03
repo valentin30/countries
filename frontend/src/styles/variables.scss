@@ -4,6 +4,12 @@
     --accent-color-60: rgb(51, 235, 145, 0.8);
     --border-radius: 4px;
     --max-width: 80rem;
+    --detail-z-index: 1000;
+    --backdrop-z-index: 500;
+    --search-result-z-index: 250;
+    --theme-z-index: 250;
+    --search-z-index: 125;
+    --table-z-index: 125;
 }
 .light-theme {
     --background-color: white;

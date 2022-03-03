@@ -1,23 +1,45 @@
 .table {
+    position: fixed;
+    top: 7.5rem;
+    bottom: 2rem;
+    left: 1px;
+    right: 1px;
+    margin: 0 auto;
+
+    user-select: none;
     max-width: var(--max-width);
     width: 99%;
-    margin: 7.5rem auto 2rem;
-    border-bottom: none;
-    user-select: none;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
 
     &__x-scroll-container {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        border: 1px solid var(--border-color);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        max-height: 100%;
+
         border-bottom: none;
+        background-color: var(--background-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+        border: 1px solid var(--border-color);
+        background-color: var(--background-color);
         overflow-x: auto;
+        overflow-y: auto;
     }
 
     &__header {
-        min-width: 43rem;
+        position: sticky;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        min-width: 62rem;
+
+        background-color: var(--background-color);
 
         .table__row {
             border-bottom: 1px solid var(--border-color);
@@ -31,22 +53,25 @@
     }
 
     &__body {
-        overflow-y: auto;
-        max-height: calc(100vh - 17.5rem);
-        min-width: 43rem;
+        min-width: 62rem;
 
         .table__row {
-            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             color: var(--text-color-secondary);
 
-            &:first-of-type {
-                border-top: none;
+            &:last-of-type {
+                border-bottom: none;
             }
         }
     }
 
     &__footer {
-        border: 1px solid var(--border-color);
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--background-color);
+        border-top: 1px solid var(--border-color);
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
     }
@@ -95,7 +120,7 @@
 
         &.name {
             max-width: 30rem;
-            min-width: 8rem;
+            min-width: 10rem;
             width: 100%;
         }
 
@@ -118,5 +143,12 @@
             max-width: 15rem;
             width: 100%;
         }
+    }
+}
+
+@media (max-width: 1000px) {
+    .table {
+        top: 4.25rem;
+        bottom: 1rem;
     }
 }

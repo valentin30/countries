@@ -10,6 +10,7 @@
     top: 1rem;
     right: 1rem;
     overflow: hidden;
+    z-index: var(--theme-z-index);
     --rotate: 0deg;
 
     &__icon-container {
@@ -37,5 +38,26 @@
     &__init {
         bottom: 0;
         left: 0;
+    }
+}
+
+@media (max-width: 1000px) {
+    .theme-switcher {
+        font-size: 1.5rem;
+        padding: 1.5rem;
+        top: 0.75rem;
+        right: 0.75rem;
+
+        &__icon-container {
+            width: 6rem;
+            height: 6rem;
+            top: -3rem;
+            right: -3rem;
+        }
+
+        &__init,
+        &__next {
+            font-size: 1.75rem;
+        }
     }
 }

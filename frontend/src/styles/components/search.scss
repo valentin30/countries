@@ -8,14 +8,13 @@
     margin: auto;
 
     &__container {
-        position: relative;
+        position: absolute;
         max-width: 30rem;
+        width: 100%;
     }
 
     &__input {
         width: 100%;
-        max-width: 30rem;
-
         padding: 1rem 1rem 1rem 2.75rem;
         font-size: 1.25rem;
         background-color: var(--background-color);
@@ -26,10 +25,6 @@
         border-radius: var(--border-radius);
         border: 1px solid var(--border-color);
         caret-color: var(--accent-color);
-    }
-
-    &__input:focus &__results-list {
-        display: none;
     }
 
     &__icon {
@@ -79,7 +74,6 @@
         }
 
         & p:first-of-type {
-            // font-weight: bold;
             font-size: 1.2rem;
             color: var(--text-color);
         }
@@ -96,5 +90,19 @@
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1000px) {
+    .search {
+        top: 0.5rem;
+        &__container {
+            width: calc(100% - 4rem);
+            left: 1px;
+        }
+
+        &__input {
+            font-size: 1rem;
+        }
     }
 }

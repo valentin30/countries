@@ -8,7 +8,7 @@
     width: 90%;
     background-color: var(--background-color);
     border-radius: var(--border-radius);
-    z-index: 3;
+    z-index: var(--detail-z-index);
     box-shadow: var(--shadow);
     display: flex;
     align-items: stretch;
@@ -109,7 +109,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: var(--backdrop-z-index);
     background-color: var(--backdrop-color);
 }
 

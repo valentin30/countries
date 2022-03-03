@@ -39,6 +39,16 @@ export const TableRowComponent: FunctionComponent<Props> = props => {
                                 {props.country.capitalName}
                             </TableCell>
                         )
+                    case TableColumns.POPULATION:
+                        return (
+                            <TableCell key={key} name={key}>
+                                {props.country.population
+                                    .toString()
+                                    .split('')
+                                    .reverse()
+                                    .reduce((num, ch, i) => ((i + 1) % 3 === 0 ? ' ' : '') + (ch + num), '')}
+                            </TableCell>
+                        )
                     default:
                         return (
                             <TableCell key={key} name={key}>

@@ -1,0 +1,1 @@
+export { HighLighter } from './HighLighter'

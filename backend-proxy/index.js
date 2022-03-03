@@ -3,7 +3,7 @@ const cors = require('cors')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-const HOST = 'localhost'
+const HOST = '192.168.0.14'
 const PORT = process.env.PORT
 const API_SERVICE_URL = process.env.API_SERVICE_URL
 

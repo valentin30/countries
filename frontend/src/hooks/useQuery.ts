@@ -17,8 +17,8 @@ const getValue = <T>(value: string, type: QueryTypes): T => {
     }
 }
 
-const config: { timerId: number; paramsMap: { [key: string]: string } } = {
-    timerId: 0,
+const config: { currentBatchNumber: number; paramsMap: { [key: string]: string } } = {
+    currentBatchNumber: 0,
     paramsMap: {}
 }
 
@@ -31,18 +31,20 @@ export const useQuery = <T>(key: string, type: QueryTypes = QueryTypes.String): 
     }
 
     const setQuery = (value: T) => {
-        config.timerId++
+        config.currentBatchNumber++
         config.paramsMap[key] = `${value}`
-        let current = config.timerId
+        let current = config.currentBatchNumber
         Promise.resolve()
             .then(() => {
-                if (config.timerId !== current) {
-                    throw new Error(`CANCEL UPDATE: ${current} updates from it applied to update ${config.timerId}`)
+                if (config.currentBatchNumber !== current) {
+                    throw new Error(`CANCEL UPDATE: another update requested`)
                 }
                 setParams(config.paramsMap)
-                config.timerId = 0
+                config.currentBatchNumber = 0
             })
-            .catch(console.log)
+            .catch(error => {
+                console.log(error.message)
+            })
     }
 
     return [query, setQuery]

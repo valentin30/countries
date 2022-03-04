@@ -79,7 +79,6 @@ export const Table: FunctionComponent = props => {
             const total = countries.length < size * page ? countries.length : size * page
             const newSize = +event.target.value
             const newPage = Math.floor(total / newSize) || 1
-            debugger
             setSize(newSize)
             setPage(newPage)
         },

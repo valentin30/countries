@@ -29,6 +29,10 @@
         background-color: var(--background-color);
         overflow-x: auto;
         overflow-y: auto;
+
+        &.loading {
+            overflow-y: hidden;
+        }
     }
 
     &__header {
@@ -88,6 +92,18 @@
         display: flex;
         align-items: center;
         min-height: 4rem;
+
+        &:nth-child(2n + 1) {
+            & :nth-child(2n + 2)::after {
+                background-color: var(--accent-color-40);
+            }
+        }
+
+        &:nth-child(2n + 2) {
+            & :nth-child(4n + 5)::after {
+                background-color: var(--accent-color-40);
+            }
+        }
     }
 
     &__cell {
@@ -95,12 +111,67 @@
         text-align: left;
         white-space: normal;
         user-select: none;
+        opacity: 0;
+
+        animation-duration: 550ms;
+        animation-name: loading;
+        animation-direction: reverse;
+        animation-fill-mode: both;
+        animation-timing-function: ease-out;
+
+        &.loading {
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 90%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                background-color: var(--loading-color);
+                animation-name: loading;
+                animation-duration: 750ms;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+                animation-fill-mode: both;
+                animation-timing-function: ease-out;
+            }
+        }
 
         &.loader {
             width: 100%;
             min-width: 2.5rem;
             max-width: 2.5rem;
             padding-right: 0.5rem;
+        }
+
+        &.code::after {
+            animation-delay: 0ms;
+        }
+
+        &.flag::after {
+            animation-delay: 150ms;
+        }
+
+        &.name::after {
+            animation-delay: 300ms;
+        }
+
+        &.capital::after {
+            animation-delay: 450ms;
+        }
+
+        &.population::after {
+            animation-delay: 600ms;
+        }
+
+        &.region::after {
+            animation-delay: 750ms;
+        }
+
+        &.subregion::after {
+            animation-delay: 900ms;
         }
 
         img {
@@ -150,5 +221,19 @@
     .table {
         top: 4.25rem;
         bottom: 1rem;
+    }
+}
+
+@keyframes loading {
+    from {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
     }
 }

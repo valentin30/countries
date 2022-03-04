@@ -6,8 +6,8 @@ import { ThemeSwitcher } from './components/ThemeSwitch'
 export const App: FunctionComponent = () => {
     return (
         <>
-            {/* <ThemeSwitcher /> */}
-            {/* <Search /> */}
+            <ThemeSwitcher />
+            <Search />
             <Table />
         </>
     )

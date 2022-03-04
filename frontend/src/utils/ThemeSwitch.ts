@@ -1,9 +1,14 @@
-type Theme = 'dark-theme' | 'light-theme'
-
 export class ThemeSwitch {
     private static instance
 
-    private constructor() {}
+    private onChangeListeners: { [key: string]: Function } = {}
+
+    private mq: MediaQueryList
+
+    private constructor() {
+        this.mq = window.matchMedia('(prefers-color-scheme: dark)')
+        this.changeThemePreferenceHandler = this.changeThemePreferenceHandler.bind(this)
+    }
 
     static getInstance(): ThemeSwitch {
         if (!ThemeSwitch.instance) {
@@ -12,24 +17,56 @@ export class ThemeSwitch {
         return ThemeSwitch.instance
     }
 
-    private getTheme(): Theme {
-        const theme = localStorage.getItem('theme')
-        if (theme) return theme as Theme
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme'
+    init(): void {
+        this.mq.addEventListener('change', this.changeThemePreferenceHandler)
+        if (this.mq.matches) {
+            this.addDarkMode()
+        }
     }
 
-    public isLightTheme(): boolean {
-        return this.getTheme() === 'light-theme'
+    destroy(): void {
+        this.mq.removeEventListener('change', this.changeThemePreferenceHandler)
     }
 
-    public changeTheme() {
-        const theme = this.getTheme()
-        const newTheme = theme === 'dark-theme' ? 'light-theme' : 'dark-theme'
-        document.body.classList.replace(theme, newTheme)
-        localStorage.setItem('theme', newTheme)
+    addUserPreferencesChangeListener(cb: Function): number {
+        const id = Date.now()
+        this.onChangeListeners[id] = cb
+        return id
     }
 
-    public initTheme() {
-        document.body.classList.add(this.getTheme())
+    removeUserPreferencesChangeListener(id: number) {
+        delete this.onChangeListeners[id]
+    }
+
+    private callChangeListeners() {
+        Object.values(this.onChangeListeners).forEach(cb => {
+            Promise.resolve().then(() => cb())
+        })
+    }
+
+    private changeThemePreferenceHandler(mq: MediaQueryListEvent): void {
+        if (mq.matches && this.isLightTheme()) {
+            this.addDarkMode()
+            this.callChangeListeners()
+        } else if (!mq.matches && !this.isLightTheme()) {
+            this.removeDarkMode()
+            this.callChangeListeners()
+        }
+    }
+
+    addDarkMode(): void {
+        document.body.classList.add('dark')
+    }
+
+    removeDarkMode(): void {
+        document.body.classList.remove('dark')
+    }
+
+    toggleDarkMode(): void {
+        document.body.classList.toggle('dark')
+    }
+
+    isLightTheme(): boolean {
+        return !document.body.classList.contains('dark')
     }
 }

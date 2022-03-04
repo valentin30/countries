@@ -9,11 +9,12 @@ import React, {
     useState
 } from 'react'
 import { Country } from '../../dto/Country'
+import { QueryTypes, useQuery } from '../../hooks/useQuery'
 import * as CountriesService from '../../services/CountryService'
 import { Detail } from '../Detail'
 import { Pager, PageSizer } from '../Paging'
 import { TableHeader } from './TableHeader'
-import { TableRow } from './TableRow'
+import { LoadingTableRow, TableRow } from './TableRow'
 import { Columns } from './types'
 
 const columns: Columns = {
@@ -28,20 +29,26 @@ const columns: Columns = {
 
 const options = [5, 10, 20, 30, 40, 50]
 
+const defaultPage = 1
+const defaultSize = 10
+
 export const Table: FunctionComponent = props => {
-    const params = useRef(new URLSearchParams(window.location.search))
+    const [page, setPage] = useQuery<number>('page', QueryTypes.Number)
+    const [size, setSize] = useQuery<number>('size', QueryTypes.Number)
+
     const [countries, setCounrties] = useState<Country[]>([])
-    const [page, setPage] = useState<number>(+(params.current.get('page') ?? 1))
-    const [size, setSize] = useState<number>(+(params.current.get('size') ?? 20))
     const [loading, setLoading] = useState<string | null>(null)
     const [active, setActive] = useState<string | null>(null)
+
     const tableRef = useRef<HTMLDivElement | null>(null)
     const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
     const longPressDebounceTimerId = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const country = countries.find(c => c.code === active)
 
-    const data = useMemo(() => countries.slice((page - 1) * size, (page - 1) * size + size), [countries, page, size])
+    const data = useMemo(() => {
+        return countries.slice((page - 1) * size, (page - 1) * size + size)
+    }, [countries, page, size])
 
     const longPressHandler = useCallback<PointerEventHandler>(event => {
         if (event.button === 0 && event.buttons === 1) {
@@ -67,40 +74,44 @@ export const Table: FunctionComponent = props => {
         }
     }, [])
 
-    const sizeCahngeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(event => {
-        setSize(size => {
+    const sizeChangeHandler: ChangeEventHandler<HTMLSelectElement> = useCallback(
+        event => {
+            const total = countries.length < size * page ? countries.length : size * page
             const newSize = +event.target.value
-            setPage(page => Math.floor((size * page) / newSize) || 1)
-            return newSize
-        })
-    }, [])
+            const newPage = Math.floor(total / newSize) || 1
+            debugger
+            setSize(newSize)
+            setPage(newPage)
+        },
+        [page, size, countries, setPage, setSize]
+    )
 
     useEffect(() => {
-        setTimeout(() => {
-            CountriesService.getAllCountries().then(setCounrties)
-        }, 1000)
-    }, [])
+        if (!page) setPage(defaultPage)
+        if (!size || !options.includes(size)) setSize(defaultSize)
+    }, [page, size, setPage, setSize])
 
-    useEffect(() => {
-        params.current.set('page', `${page}`)
-        params.current.set('size', `${size}`)
-        window.history.replaceState(null, null, `${window.location.origin}?${params.current.toString()}`)
+    useCallback(() => {
+        if (!page) return
         if (tableRef.current.scrollTop !== 0) {
             tableRef.current.scrollTop = 0
         }
-    }, [page, size])
+    }, [page])
 
     useEffect(() => {
-        document.body.addEventListener('resize', () => {
-            alert('resize')
+        // Simulate loading
+        CountriesService.getAllCountries().then(data => {
+            setTimeout(() => {
+                setCounrties(data)
+            }, 1250)
         })
-    })
+    }, [])
 
     return (
         <>
             {!!country && <Detail country={country} onClose={() => setActive(null)} />}
             <div className='table'>
-                <div className='table__x-scroll-container' ref={tableRef}>
+                <div className={`table__x-scroll-container${data.length ? '' : ' loading'}`} ref={tableRef}>
                     <TableHeader columns={columns} />
                     <div className='table__body'>
                         {data.map(country => (
@@ -115,20 +126,25 @@ export const Table: FunctionComponent = props => {
                         ))}
 
                         {!data.length &&
-                            Array(size > 11 ? 11 : size)
+                            Array(size)
                                 .fill(1)
-                                .map((_, i) => <div key={i} className='table__row'></div>)}
+                                .map((_, i) => <LoadingTableRow key={i} columns={columns} />)}
                     </div>
                     <div className='table__footer'>
                         <div className='table__row'>
                             <div className='table__paging'>
-                                <PageSizer selected={size} options={options} onChange={sizeCahngeHandler} />
+                                <PageSizer
+                                    selected={size}
+                                    options={options}
+                                    disabled={!countries.length}
+                                    onChange={sizeChangeHandler}
+                                />
                                 <Pager
                                     page={page}
                                     count={size}
                                     totalCount={countries.length}
-                                    onBack={() => setPage(page => page - 1)}
-                                    onNext={() => setPage(page => page + 1)}
+                                    onBack={() => setPage(page - 1)}
+                                    onNext={() => setPage(page + 1)}
                                 />
                             </div>
                         </div>

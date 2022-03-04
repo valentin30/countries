@@ -50,6 +50,11 @@
             -webkit-appearance: none;
             background-color: var(--background-color);
             color: var(--text-color-secondary);
+
+            ::selection {
+                background-color: #222;
+                color: white;
+            }
         }
     }
 

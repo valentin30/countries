@@ -4,7 +4,20 @@ import { Loader } from '../Loader'
 import { TableCell } from './TableCell'
 import { Columns, TableColumns, TableColumsArray } from './types'
 
-interface Props {
+interface LoadingTableRowProps {
+    columns: Columns
+}
+
+export const LoadingTableRow: FunctionComponent<LoadingTableRowProps> = ({ columns }) => {
+    return (
+        <div className='table__row'>
+            <div className='table__cell loader'></div>
+            {TableColumsArray.map(key => (!columns[key] ? null : <TableCell key={key} name={key} loading />))}
+        </div>
+    )
+}
+
+interface TableRowProps {
     country: Country
     columns: Columns
     loading: boolean
@@ -12,7 +25,7 @@ interface Props {
     onLongPressFail: PointerEventHandler
 }
 
-export const TableRowComponent: FunctionComponent<Props> = props => {
+export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
     return (
         <div
             data-code={props.country.code}

@@ -5,6 +5,7 @@ interface Props {
     options: number[]
     selected: number
     onChange: ChangeEventHandler<HTMLSelectElement>
+    disabled: boolean
 }
 
 export const PageSizer: FunctionComponent<Props> = props => {
@@ -14,7 +15,13 @@ export const PageSizer: FunctionComponent<Props> = props => {
                 Rows:
             </label>
             <div className='page-sizer__select'>
-                <select value={props.selected} onChange={props.onChange} name='page-size' id='page-size'>
+                <select
+                    value={props.selected}
+                    disabled={props.disabled}
+                    onChange={props.onChange}
+                    name='page-size'
+                    id='page-size'
+                >
                     {props.options.map(value => (
                         <option key={value} value={value}>
                             {value}

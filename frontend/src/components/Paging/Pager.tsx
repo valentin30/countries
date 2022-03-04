@@ -10,20 +10,27 @@ interface Props {
 }
 
 export const Pager: FunctionComponent<Props> = props => {
-    const from = props.count * (props.page - 1)
-    const to = from + props.count > props.totalCount ? props.totalCount : from + props.count
+    let from: number, to: number
+    if (props.totalCount) {
+        from = props.count * (props.page - 1)
+        to = from + props.count > props.totalCount ? props.totalCount : from + props.count
+        from++
+    } else {
+        from = 0
+        to = 0
+    }
     return (
         <div className='pager'>
             <p className='pager__info'>
-                {from + 1} - {to} of {props.totalCount}
+                {from} - {to} of {props.totalCount}
             </p>
-            <button aria-label='Previous page' onClick={props.onBack} disabled={from === 0} className='pager__previous'>
+            <button aria-label='Previous page' onClick={props.onBack} disabled={!from} className='pager__previous'>
                 <MdOutlineArrowBackIosNew />
             </button>
             <button
                 aria-label='Next page'
                 onClick={props.onNext}
-                disabled={to === props.totalCount}
+                disabled={!to || to === props.totalCount}
                 className='pager__next'
             >
                 <MdOutlineArrowForwardIos />

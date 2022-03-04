@@ -1,62 +1,25 @@
 .theme-switcher {
-    background-color: transparent;
-    font-size: 2rem;
-    padding: 2rem;
-    border-radius: 50%;
-    color: var(--accent-color);
-    border: none;
-    border-radius: 50%;
     position: fixed;
     top: 1rem;
     right: 1rem;
-    overflow: hidden;
+    padding: 0.75rem;
+    color: var(--accent-color);
+    border: none;
+    background-color: transparent;
     z-index: var(--theme-z-index);
-    --rotate: 0deg;
 
-    &__icon-container {
-        position: fixed;
-        width: 8rem;
-        height: 8rem;
-        top: -4rem;
-        right: -4rem;
-        transition: transform 450ms ease-out;
-        pointer-events: none;
-        transform: rotate(var(--rotate));
-    }
-
-    &__init,
-    &__next {
-        position: absolute;
+    &__icon {
         font-size: 2.25rem;
-    }
-    &__next {
-        top: 0;
-        right: 0;
-        transform: rotate(180deg);
-    }
-
-    &__init {
-        bottom: 0;
-        left: 0;
     }
 }
 
 @media (max-width: 1000px) {
     .theme-switcher {
-        font-size: 1.5rem;
-        padding: 1.5rem;
+        padding: 0.5rem;
         top: 0.75rem;
         right: 0.75rem;
 
-        &__icon-container {
-            width: 6rem;
-            height: 6rem;
-            top: -3rem;
-            right: -3rem;
-        }
-
-        &__init,
-        &__next {
+        &__icon {
             font-size: 1.75rem;
         }
     }

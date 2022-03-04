@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import './styles/index.scss'
 import { ThemeSwitch } from './utils/ThemeSwitch'
 
-ThemeSwitch.getInstance().initTheme()
+ThemeSwitch.getInstance().init()
 
 ReactDOM.render(
     <React.StrictMode>

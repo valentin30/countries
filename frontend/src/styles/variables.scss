@@ -2,6 +2,7 @@
     --accent-color: #33eb91;
     --accent-color-80: rgba(51, 235, 146, 0.9);
     --accent-color-60: rgb(51, 235, 145, 0.8);
+    --accent-color-40: rgb(51, 235, 145, 0.5);
     --border-radius: 4px;
     --max-width: 80rem;
     --detail-z-index: 1000;
@@ -10,19 +11,23 @@
     --theme-z-index: 250;
     --search-z-index: 125;
     --table-z-index: 125;
-}
-.light-theme {
+
     --background-color: white;
     --background-color-secondary: #fafafa;
+    --loading-color: #f0f0f0;
     --text-color: rgba(0, 0, 0, 0.87);
     --text-color-secondary: rgba(0, 0, 0, 0.6);
     --border-color: #dddddd;
     --scroll-track-color: #fafafa;
     --backdrop-color: rgba(255, 255, 255, 0.5);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    color-scheme: light;
 }
 
-.dark-theme {
+.dark {
+    --accent-color-40: rgba(81, 82, 81, 0.438);
+    --loading-color: rgb(17, 17, 17);
+
     --background-color: #000000;
     --background-color-secondary: #121212;
     --text-color: rgba(255, 255, 255, 0.87);
@@ -31,4 +36,5 @@
     --scroll-track-color: #000000;
     --backdrop-color: rgba(0, 0, 0, 0.5);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    color-scheme: dark;
 }

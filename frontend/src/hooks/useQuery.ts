@@ -1,4 +1,3 @@
-import { resolve } from 'path/posix'
 import { useSearchParams } from 'react-router-dom'
 
 export enum QueryTypes {

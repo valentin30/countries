@@ -2,15 +2,16 @@
     position: fixed;
     top: 7.5rem;
     bottom: 2rem;
-    left: 1px;
-    right: 1px;
+    left: 0.25rem;
+    right: 0.25rem;
     margin: 0 auto;
 
     user-select: none;
     max-width: var(--max-width);
-    width: 99%;
+    z-index: var(--table-z-index);
 
     &__x-scroll-container {
+        z-index: inherit;
         position: absolute;
         top: 0;
         left: 0;
@@ -36,13 +37,12 @@
     }
 
     &__header {
+        z-index: inherit;
         position: sticky;
         top: 0;
         left: 0;
-
         width: 100%;
         min-width: 62rem;
-
         background-color: var(--background-color);
 
         .table__row {
@@ -53,10 +53,18 @@
             font-weight: bold;
             text-transform: capitalize;
             color: var(--text-color);
+            border-right: 1px solid var(--border-color);
+
+            &:first-of-type,
+            &:last-of-type {
+                border-right: 0;
+            }
         }
     }
 
     &__body {
+        z-index: inherit;
+
         min-width: 62rem;
 
         .table__row {
@@ -70,6 +78,8 @@
     }
 
     &__footer {
+        z-index: inherit;
+
         position: sticky;
         bottom: 0;
         left: 0;
@@ -107,13 +117,15 @@
     }
 
     &__cell {
+        z-index: inherit;
+
         padding: 0.75rem;
         text-align: left;
         white-space: normal;
         user-select: none;
         opacity: 0;
 
-        animation-duration: 550ms;
+        animation-duration: 350ms;
         animation-name: loading;
         animation-direction: reverse;
         animation-fill-mode: both;
@@ -137,6 +149,12 @@
                 animation-fill-mode: both;
                 animation-timing-function: ease-out;
             }
+        }
+
+        &.header {
+            display: flex;
+            align-items: center;
+            position: relative;
         }
 
         &.loader {
@@ -182,11 +200,30 @@
 
         &.code,
         &.flag {
-            width: 4rem;
-            min-width: 4rem;
             display: flex;
             align-items: center;
+        }
+
+        &.code {
+            width: 5.5rem;
+            min-width: 5.5rem;
+
+            margin-left: 0.25rem;
+
+            &.header {
+                margin-left: 0;
+            }
+        }
+
+        &.flag {
+            width: 4rem;
+            min-width: 4rem;
             justify-content: center;
+
+            &.header {
+                width: 4.5rem;
+                min-width: 4.5rem;
+            }
         }
 
         &.name {
@@ -213,7 +250,22 @@
             min-width: 6rem;
             max-width: 15rem;
             width: 100%;
+
+            & .table__sort {
+                right: 0.75rem;
+            }
         }
+    }
+
+    &__sort {
+        background-color: transparent;
+        font-size: 1.1rem;
+        border: none;
+        position: absolute;
+        padding: 0.75rem;
+        right: 0;
+        top: 0;
+        bottom: 0;
     }
 }
 

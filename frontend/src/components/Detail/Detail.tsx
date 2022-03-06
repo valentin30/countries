@@ -8,6 +8,7 @@ interface Props {
 }
 
 export const Detail: FunctionComponent<Props> = props => {
+    if (!props.country) return null
     return (
         <>
             <div onClick={props.onClose} className='backdrop'></div>

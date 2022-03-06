@@ -1,8 +1,8 @@
 import React, { FunctionComponent, PointerEventHandler } from 'react'
 import { Country } from '../../dto/Country'
+import { Columns, TableColumns, TableColumsArray } from '../../types'
 import { Loader } from '../Loader'
 import { TableCell } from './TableCell'
-import { Columns, TableColumns, TableColumsArray } from './types'
 
 interface LoadingTableRowProps {
     columns: Columns
@@ -26,6 +26,13 @@ interface TableRowProps {
 }
 
 export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
+    const population = props.country.population
+        ? props.country.population
+              .toString()
+              .split('')
+              .reverse()
+              .reduce((num, ch, i) => ((i + 1) % 3 === 0 ? ' ' : '') + (ch + num), '')
+        : 'n/a'
     return (
         <div
             data-code={props.country.code}
@@ -55,11 +62,7 @@ export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
                     case TableColumns.POPULATION:
                         return (
                             <TableCell key={key} name={key}>
-                                {props.country.population
-                                    .toString()
-                                    .split('')
-                                    .reverse()
-                                    .reduce((num, ch, i) => ((i + 1) % 3 === 0 ? ' ' : '') + (ch + num), '')}
+                                {population}
                             </TableCell>
                         )
                     default:

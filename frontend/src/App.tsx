@@ -7,8 +7,8 @@ export const App: FunctionComponent = () => {
     return (
         <>
             <ThemeSwitcher />
-            <Search />
             <Table />
+            <Search />
         </>
     )
 }

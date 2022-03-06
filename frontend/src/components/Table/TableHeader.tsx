@@ -1,9 +1,12 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, MouseEventHandler } from 'react'
+import { Columns, TableColumsArray } from '../../types'
 import { TableCell } from './TableCell'
-import { Columns, TableColumsArray } from './types'
+import { Sort } from './Table'
 
 interface Props {
     columns: Columns
+    onSort: MouseEventHandler<HTMLButtonElement>
+    sort: Sort
 }
 
 const TableHeaderComponent: FunctionComponent<Props> = props => {
@@ -15,7 +18,15 @@ const TableHeaderComponent: FunctionComponent<Props> = props => {
                     if (!props.columns[key]) {
                         return null
                     }
-                    return <TableCell key={key} name={key} header />
+                    return (
+                        <TableCell
+                            onSort={props.onSort}
+                            direction={props.sort.name === key ? props.sort.direction : 1}
+                            key={key}
+                            name={key}
+                            header
+                        />
+                    )
                 })}
             </div>
         </div>

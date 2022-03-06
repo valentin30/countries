@@ -24,7 +24,12 @@ export const Pager: FunctionComponent<Props> = props => {
             <p className='pager__info'>
                 {from} - {to} of {props.totalCount}
             </p>
-            <button aria-label='Previous page' onClick={props.onBack} disabled={!from} className='pager__previous'>
+            <button
+                aria-label='Previous page'
+                onClick={props.onBack}
+                disabled={!from || from === 1}
+                className='pager__previous'
+            >
                 <MdOutlineArrowBackIosNew />
             </button>
             <button

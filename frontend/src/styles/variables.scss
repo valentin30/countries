@@ -3,9 +3,11 @@
     --accent-color-80: rgba(51, 235, 146, 0.9);
     --accent-color-60: rgb(51, 235, 145, 0.8);
     --accent-color-40: rgb(51, 235, 145, 0.5);
+    --text-color-accent: rgba(0, 0, 0, 0.87);
     --border-radius: 4px;
     --max-width: 80rem;
     --detail-z-index: 1000;
+    --error-z-index: 1500;
     --backdrop-z-index: 500;
     --search-result-z-index: 250;
     --theme-z-index: 250;
@@ -18,8 +20,7 @@
     --text-color: rgba(0, 0, 0, 0.87);
     --text-color-secondary: rgba(0, 0, 0, 0.6);
     --border-color: #dddddd;
-    --scroll-track-color: #fafafa;
-    --backdrop-color: rgba(255, 255, 255, 0.5);
+    --backdrop-color: rgba(255, 255, 255, 0.7);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     color-scheme: light;
 }
@@ -27,14 +28,12 @@
 .dark {
     --accent-color-40: rgba(81, 82, 81, 0.438);
     --loading-color: rgb(17, 17, 17);
-
     --background-color: #000000;
     --background-color-secondary: #121212;
     --text-color: rgba(255, 255, 255, 0.87);
     --text-color-secondary: rgb(255, 255, 255, 0.6);
-    --border-color: #121212;
-    --scroll-track-color: #000000;
-    --backdrop-color: rgba(0, 0, 0, 0.5);
+    --border-color: #181818;
+    --backdrop-color: rgba(0, 0, 0, 0.7);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     color-scheme: dark;
 }

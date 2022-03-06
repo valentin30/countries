@@ -1,6 +1,6 @@
 import React, { FunctionComponent, MouseEventHandler } from 'react'
 import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
-import { TableColumns } from '../../types'
+import { TableColumns } from '../../utils/constants'
 
 interface Props {
     name: TableColumns
@@ -49,4 +49,3 @@ const TableCellComponent: FunctionComponent<Props> = props => {
 }
 
 export const TableCell = React.memo(TableCellComponent)
-// export const TableCell = TableCellComponent

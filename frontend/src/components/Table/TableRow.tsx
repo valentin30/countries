@@ -1,25 +1,22 @@
 import React, { FunctionComponent, PointerEventHandler } from 'react'
 import { Country } from '../../dto/Country'
-import { Columns, TableColumns, TableColumsArray } from '../../types'
+import { TableColumsArray, TableColumns } from '../../utils/constants'
 import { Loader } from '../Loader'
 import { TableCell } from './TableCell'
 
-interface LoadingTableRowProps {
-    columns: Columns
-}
-
-export const LoadingTableRow: FunctionComponent<LoadingTableRowProps> = ({ columns }) => {
+export const LoadingTableRow: FunctionComponent = () => {
     return (
         <div className='table__row'>
             <div className='table__cell loader'></div>
-            {TableColumsArray.map(key => (!columns[key] ? null : <TableCell key={key} name={key} loading />))}
+            {TableColumsArray.map(key => (
+                <TableCell key={key} name={key} loading />
+            ))}
         </div>
     )
 }
 
 interface TableRowProps {
     country: Country
-    columns: Columns
     loading: boolean
     onLongPress: PointerEventHandler
     onLongPressFail: PointerEventHandler
@@ -45,9 +42,6 @@ export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
                 <Loader loading={props.loading} size='small' />
             </div>
             {TableColumsArray.map(key => {
-                if (!props.columns[key]) {
-                    return null
-                }
                 switch (key) {
                     case TableColumns.FLAG:
                         return (
@@ -78,4 +72,3 @@ export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
 }
 
 export const TableRow = React.memo(TableRowComponent)
-// export const TableRow = TableRowComponent

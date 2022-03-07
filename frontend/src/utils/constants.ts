@@ -13,6 +13,10 @@ export enum TableColumns {
     SUBREGION = 'subregion'
 }
 
+export interface Map {
+    [key: string]: number
+}
+
 export const TableColumsArray = [
     TableColumns.CODE,
     TableColumns.FLAG,

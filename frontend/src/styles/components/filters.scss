@@ -1,0 +1,194 @@
+.filters {
+    &__container {
+        position: fixed;
+        top: 11.5rem;
+        left: calc((100vw - var(--max-width)) / 2);
+        z-index: var(--search-result-z-index);
+        bottom: 2rem;
+        background-color: var(--background-color-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        padding: 1.5rem 1.5rem 2rem 1.5rem;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: 100%;
+        grid-template-areas:
+            'name'
+            'regions'
+            'subregions';
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__clear {
+        background-color: transparent;
+        color: var(--accent-color-80);
+        font-size: 0.9rem;
+        font-weight: bold;
+        border: none;
+    }
+
+    &__name {
+        grid-area: name;
+    }
+
+    &__regions {
+        grid-area: regions;
+    }
+
+    &__subregions {
+        grid-area: subregions;
+    }
+
+    &__label {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--text-color);
+    }
+
+    &__name,
+    &__subregions,
+    &__subregions--mobile,
+    &__regions,
+    &__regions--mobile {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__regions--mobile select,
+    &__subregions--mobile select,
+    &__name input {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        padding: 0.75rem;
+        outline: none;
+        background-color: var(--background-color);
+    }
+
+    &__subregions,
+    &__subregions--mobile,
+    &__regions,
+    &__regions--mobile {
+        margin-top: 1.5rem;
+        // height: 20px;
+    }
+
+    &__options {
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--background-color);
+        padding: 0;
+        margin: 0;
+
+        overflow-y: auto;
+    }
+
+    &__option {
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        user-select: none;
+        position: relative;
+
+        &:last-of-type {
+            border-bottom: none;
+        }
+
+        &.disabled * {
+            opacity: 0.5;
+        }
+
+        .checked {
+            display: none;
+        }
+
+        .blank {
+            display: block;
+        }
+
+        svg.filters__icon {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            position: absolute;
+            left: 1rem;
+            pointer-events: none;
+        }
+
+        input[type='checkbox'] {
+            display: none;
+
+            &:disabled + .filters__icon {
+                cursor: default;
+            }
+
+            &:checked + svg.filters__icon.checked {
+                display: block;
+            }
+
+            &:checked + svg.filters__icon.checked + svg.filters__icon.blank {
+                display: none;
+            }
+        }
+
+        & label {
+            margin-left: 0.25rem;
+            padding: 1rem 1rem 1rem 3rem;
+
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            & b {
+                font-weight: 400;
+                font-size: 1rem;
+                color: var(--text-color);
+            }
+
+            & span {
+                margin-left: 0.25rem;
+                font-size: 0.825rem;
+                color: var(--text-color-secondary);
+            }
+        }
+    }
+
+    &__helper {
+        position: fixed;
+        pointer-events: all;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: var(--search-result-z-index);
+    }
+}
+
+@media (max-width: 1000px) {
+    .filters {
+        &__container {
+            top: 8.25rem;
+            bottom: 1rem;
+        }
+    }
+}
+
+@media (max-width: 80.5rem) {
+    .filters {
+        &__container {
+            left: 0.25rem;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .filters {
+        &__container {
+            right: 0.25rem;
+        }
+    }
+}

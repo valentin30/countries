@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { App } from './App'
+import { CountryContextProvider } from './context/country/CountryContext'
 import reportWebVitals from './reportWebVitals'
 import './styles/index.scss'
 import { ThemeSwitch } from './utils/ThemeSwitch'
@@ -9,7 +10,9 @@ ThemeSwitch.getInstance().init()
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <CountryContextProvider>
+            <App />
+        </CountryContextProvider>
     </React.StrictMode>,
     document.getElementById('root')
 )

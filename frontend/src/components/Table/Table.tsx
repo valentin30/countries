@@ -54,14 +54,15 @@ export const Table: FunctionComponent = () => {
         return state.list.filter(country => country.name.toLowerCase().includes(name.toLowerCase()))
     }, [state, name])
 
-    const filtered = useMemo(() => {
-        const filtered = filteredByName.filter(country => {
-            if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
-            if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
-            return true
-        })
-        return getSortedList(filtered, sort.name, sort.direction)
-    }, [filteredByName, selectedRegions, selectedSubRegions, sort])
+    const filtered = useMemo(
+        () =>
+            filteredByName.filter(country => {
+                if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
+                if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
+                return true
+            }),
+        [filteredByName, selectedRegions, selectedSubRegions]
+    )
 
     const [regions, subRegions] = useMemo(() => getRegionSubRegionMaps(state.list), [state])
     const [filteredRegions, filteredSubRegions] = useMemo(
@@ -70,7 +71,10 @@ export const Table: FunctionComponent = () => {
     )
 
     const totalCount = filtered.length
-    const sorted = filtered.slice((page - 1) * size, (page - 1) * size + size)
+    const sorted = useMemo(
+        () => getSortedList(filtered.slice((page - 1) * size, (page - 1) * size + size), sort.name, sort.direction),
+        [filtered, sort, page, size]
+    )
 
     const sortChangeHandler: MouseEventHandler<HTMLButtonElement> = e => {
         const name = e.currentTarget.dataset.sort as TableColumns

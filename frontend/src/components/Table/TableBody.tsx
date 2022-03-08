@@ -1,7 +1,15 @@
-import React, { FunctionComponent, PointerEventHandler, useCallback, useRef, useState } from 'react'
+import React, {
+    FunctionComponent,
+    PointerEventHandler,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState
+} from 'react'
+import { CountryContext } from '../../context/country/CountryContext'
 import { Country } from '../../dto/Country'
 import { QueryTypes, useQuery } from '../../hooks/useQuery'
-import { Detail } from '../Detail'
 import { LoadingTableRow, TableRow } from './TableRow'
 
 interface Props {
@@ -11,15 +19,13 @@ interface Props {
 }
 
 export const TableBody: FunctionComponent<Props> = props => {
+    const { list } = props
+    const { country, setCountry } = useContext(CountryContext)
     const [size] = useQuery<number>('size', QueryTypes.Number)
-
     const [loading, setLoading] = useState<string | null>(null)
     const [active, setActive] = useState<string | null>(null)
-
     const longPressTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
     const longPressDebounceTimerId = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-    const country = props.list.find(c => c.code === active)
 
     const longPressHandler = useCallback<PointerEventHandler>(event => {
         if (event.button === 0 && event.buttons === 1) {
@@ -45,29 +51,37 @@ export const TableBody: FunctionComponent<Props> = props => {
         }
     }, [])
 
+    useEffect(() => {
+        if (!active) return
+        const newCountry = list.find(c => c.code === active)
+        if (!newCountry) return
+        setCountry(newCountry)
+    }, [active, list, setCountry])
+
+    useEffect(() => {
+        if (!country) setActive(null)
+    }, [country])
+
     return (
-        <>
-            <Detail country={country} onClose={() => setActive(null)} />
-            <div className='table__body'>
-                {!props.loading &&
-                    props.list.map(country => (
-                        <TableRow
-                            key={country.code}
-                            country={country}
-                            onLongPress={longPressHandler}
-                            onLongPressFail={longPressFailHandler}
-                            loading={country.code === active || country.code === loading}
-                        />
-                    ))}
-                {props.loading &&
-                    Array(size)
-                        .fill(1)
-                        .map((_, i) => <LoadingTableRow key={i} />)}
-                {props.error &&
-                    Array(size)
-                        .fill(1)
-                        .map((_, i) => <div className='table__row' key={i} />)}
-            </div>
-        </>
+        <div className='table__body'>
+            {!props.loading &&
+                props.list.map(country => (
+                    <TableRow
+                        key={country.code}
+                        country={country}
+                        onLongPress={longPressHandler}
+                        onLongPressFail={longPressFailHandler}
+                        loading={country.code === active || country.code === loading}
+                    />
+                ))}
+            {props.loading &&
+                Array(size)
+                    .fill(1)
+                    .map((_, i) => <LoadingTableRow key={i} />)}
+            {props.error &&
+                Array(size)
+                    .fill(1)
+                    .map((_, i) => <div className='table__row' key={i} />)}
+        </div>
     )
 }

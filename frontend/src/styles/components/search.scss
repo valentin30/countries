@@ -55,6 +55,7 @@
         top: 5.75rem;
         bottom: 1rem;
         overflow-y: auto;
+        width: 100%;
         z-index: var(--search-result-z-index);
     }
 
@@ -129,5 +130,13 @@
             left: 0.25rem;
             right: 0.25rem;
         }
+    }
+}
+
+@media (max-width: 500px) {
+    .search__results-list {
+        left: 0.25rem;
+        right: 0.25rem;
+        width: auto;
     }
 }

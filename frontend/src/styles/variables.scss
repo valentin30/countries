@@ -4,6 +4,7 @@
     --accent-color-60: rgb(51, 235, 145, 0.8);
     --accent-color-40: rgb(51, 235, 145, 0.5);
     --text-color-accent: rgba(0, 0, 0, 0.87);
+    --backdrop-color: rgba(0, 0, 0, 0.7);
     --border-radius: 4px;
     --max-width: 80rem;
     --detail-z-index: 1000;
@@ -20,7 +21,6 @@
     --text-color: rgba(0, 0, 0, 0.87);
     --text-color-secondary: rgba(0, 0, 0, 0.6);
     --border-color: #dddddd;
-    --backdrop-color: rgba(255, 255, 255, 0.7);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     color-scheme: light;
 }
@@ -33,7 +33,6 @@
     --text-color: rgba(255, 255, 255, 0.87);
     --text-color-secondary: rgb(255, 255, 255, 0.6);
     --border-color: #181818;
-    --backdrop-color: rgba(0, 0, 0, 0.7);
     --shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     color-scheme: dark;
 }

@@ -15,10 +15,11 @@ import { INIT_PAGE, INIT_SIZE, PAGE_SIZES, TableColumns } from '../../utils/cons
 import { getRegionSubRegionMaps, getSortedList, simulateDownload } from '../../utils/functions'
 import { Actions, initialState, reducer } from '../../utils/reducer'
 import { ErrorPopup } from '../ErrorPopup'
-import { MultipleSelect } from '../MultipleSelect'
+import { Filters } from '../Filters'
 import { TableBody } from './TableBody'
 import { TableFooter } from './TableFooter'
 import { TableHeader } from './TableHeader'
+
 export interface Sort {
     name: TableColumns
     direction: 1 | -1
@@ -35,38 +36,31 @@ const multiSelectChangeHandlerGenerator = (
 }
 
 export const Table: FunctionComponent = () => {
+    const tableRef = useRef<HTMLDivElement | null>(null)
+    const tableTop = useRef(0)
     const [state, dispatch] = useReducer(reducer, initialState)
-
     const [page, setPage] = useQuery<number>('page', QueryTypes.Number)
     const [size, setSize] = useQuery<number>('size', QueryTypes.Number)
-
     const [open, setOpen] = useState<boolean>(false)
+    const [name, setName] = useState<string>('')
+    const [selectedRegions, setSelectedRegions] = useState<string[]>([])
+    const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([])
     const [sort, setSort] = useState<Sort>({
         name: TableColumns.CODE,
         direction: 1
     })
-
-    const [name, setName] = useState<string>('')
-    const [selectedRegions, setSelectedRegions] = useState<string[]>([])
-    const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([])
-
-    const tableRef = useRef<HTMLDivElement | null>(null)
-    const tableTop = useRef(0)
 
     const filteredByName = useMemo(() => {
         return state.list.filter(country => country.name.toLowerCase().includes(name.toLowerCase()))
     }, [state, name])
 
     const filtered = useMemo(() => {
-        return getSortedList(
-            filteredByName.filter(country => {
-                if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
-                if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
-                return true
-            }),
-            sort.name,
-            sort.direction
-        )
+        const filtered = filteredByName.filter(country => {
+            if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
+            if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
+            return true
+        })
+        return getSortedList(filtered, sort.name, sort.direction)
     }, [filteredByName, selectedRegions, selectedSubRegions, sort])
 
     const [regions, subRegions] = useMemo(() => getRegionSubRegionMaps(state.list), [state])
@@ -131,42 +125,22 @@ export const Table: FunctionComponent = () => {
                     <TableFooter totalCount={totalCount} />
                 </div>
             </div>
-            {open && (
-                <>
-                    <div className='filters__helper' onClick={() => setOpen(false)} />
-                    <div className='filters__container'>
-                        <div className='filters__name'>
-                            <label className='filters__label' htmlFor='filter-name'>
-                                Name
-                            </label>
-                            <input
-                                id='filter-name'
-                                type='text'
-                                name='filter name'
-                                placeholder='Enter keyword to filter results'
-                                value={name}
-                                onChange={event => setName(event.target.value.trim())}
-                            />
-                        </div>
-                        <MultipleSelect
-                            value={selectedRegions}
-                            onClear={() => setSelectedRegions([])}
-                            onChange={multiSelectChangeHandlerGenerator(setSelectedRegions)}
-                            name='Regions'
-                            full={regions}
-                            filtered={filteredRegions}
-                        />
-                        <MultipleSelect
-                            value={selectedSubRegions}
-                            onClear={() => setSelectedSubRegions([])}
-                            onChange={multiSelectChangeHandlerGenerator(setSelectedSubRegions)}
-                            name='Subregions'
-                            full={subRegions}
-                            filtered={filteredSubRegions}
-                        />
-                    </div>
-                </>
-            )}
+            <Filters
+                open={open}
+                filterName={name}
+                fullRegions={regions}
+                fullSubRegions={subRegions}
+                selectedRegions={selectedRegions}
+                filteredRegions={filteredRegions}
+                selectedSubRegions={selectedSubRegions}
+                filteredSubRegions={filteredSubRegions}
+                onClose={() => setOpen(false)}
+                onRegionsClear={() => setSelectedRegions([])}
+                onSubRegionsClear={() => setSelectedSubRegions([])}
+                onFilterNameChange={event => setName(event.target.value.trim())}
+                onRegionsChange={multiSelectChangeHandlerGenerator(setSelectedRegions)}
+                onSubRegionsChange={multiSelectChangeHandlerGenerator(setSelectedSubRegions)}
+            />
         </>
     )
 }

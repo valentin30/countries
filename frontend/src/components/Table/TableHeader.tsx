@@ -11,7 +11,7 @@ interface Props {
     hasActiveFilters: boolean
 }
 
-const TableHeaderComponent: FunctionComponent<Props> = props => {
+export const TableHeader: FunctionComponent<Props> = props => {
     return (
         <div className='table__header'>
             <div className='table__row'>
@@ -37,6 +37,3 @@ const TableHeaderComponent: FunctionComponent<Props> = props => {
         </div>
     )
 }
-
-// export const TableHeader = React.memo(TableHeaderComponent)
-export const TableHeader = TableHeaderComponent

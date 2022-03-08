@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FunctionComponent, useCallback } from 'react'
+import React, { ChangeEventHandler, FunctionComponent } from 'react'
 import { QueryTypes, useQuery } from '../../hooks/useQuery'
 import { PAGE_SIZES } from '../../utils/constants'
 import { Pager, PageSizer } from '../Paging'

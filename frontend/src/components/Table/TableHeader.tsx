@@ -1,4 +1,4 @@
-import React, { FocusEventHandler, FunctionComponent, MouseEventHandler } from 'react'
+import React, { FunctionComponent, MouseEventHandler } from 'react'
 import { BsFilterLeft } from 'react-icons/bs'
 import { TableColumsArray } from '../../utils/constants'
 import { Sort } from './Table'
@@ -38,4 +38,5 @@ const TableHeaderComponent: FunctionComponent<Props> = props => {
     )
 }
 
-export const TableHeader = React.memo(TableHeaderComponent)
+// export const TableHeader = React.memo(TableHeaderComponent)
+export const TableHeader = TableHeaderComponent

@@ -39,7 +39,7 @@ const getChildren = (props: Props): React.ReactNode => {
     return props.children
 }
 
-const TableCellComponent: FunctionComponent<Props> = props => {
+export const TableCell: FunctionComponent<Props> = props => {
     if (props.loading) {
         return <div className={`table__cell ${props.name} loading`} />
     }
@@ -47,5 +47,3 @@ const TableCellComponent: FunctionComponent<Props> = props => {
         <div className={`table__cell ${props.name}${props.header ? ' header' : ''}`}>{getChildren(props) || 'n/a'}</div>
     )
 }
-
-export const TableCell = React.memo(TableCellComponent)

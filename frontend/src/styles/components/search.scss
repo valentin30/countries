@@ -12,6 +12,10 @@
         max-width: 30rem;
         width: 100%;
         z-index: var(--search-z-index);
+
+        & label {
+            display: none;
+        }
     }
 
     &__input {

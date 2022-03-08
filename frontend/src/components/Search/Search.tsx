@@ -38,8 +38,11 @@ export const Search: FunctionComponent = () => {
             <div className='search'>
                 <div className='search__container'>
                     <IoSearch className='search__icon' />
+                    <label htmlFor='search'>Search</label>
                     <input
+                        id='search'
                         type='text'
+                        placeholder='Search...'
                         className='search__input'
                         onFocus={() => setVisible(true)}
                         onBlur={() => setTimeout(() => setVisible(false), 100)}

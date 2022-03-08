@@ -1,4 +1,5 @@
 import React, {
+    FormEventHandler,
     FunctionComponent,
     MouseEventHandler,
     useCallback,
@@ -8,11 +9,10 @@ import React, {
     useRef,
     useState
 } from 'react'
-import { Country } from '../../dto/Country'
 import { QueryTypes, useQuery } from '../../hooks/useQuery'
 import * as CountriesService from '../../services/CountryService'
-import { INIT_PAGE, INIT_SIZE, PAGE_SIZES, TableColumns, Map } from '../../utils/constants'
-import { isMobile, simulateDownload } from '../../utils/functions'
+import { INIT_PAGE, INIT_SIZE, PAGE_SIZES, TableColumns } from '../../utils/constants'
+import { getRegionSubRegionMaps, getSortedList, simulateDownload } from '../../utils/functions'
 import { Actions, initialState, reducer } from '../../utils/reducer'
 import { ErrorPopup } from '../ErrorPopup'
 import { MultipleSelect } from '../MultipleSelect'
@@ -24,18 +24,14 @@ export interface Sort {
     direction: 1 | -1
 }
 
-const getRegionSubRegionMaps = (list: Country[]) => {
-    return list.reduce(
-        ([regions, subRegions]: [Map, Map], country): [Map, Map] => {
-            const { region, subregion } = country
-            if (!regions[region]) regions[region] = 0
-            if (!subRegions[subregion]) subRegions[subregion] = 0
-            regions[region]++
-            subRegions[subregion]++
-            return [regions, subRegions]
-        },
-        [{}, {}]
-    )
+const multiSelectChangeHandlerGenerator = (
+    setState: React.Dispatch<React.SetStateAction<string[]>>
+): FormEventHandler<HTMLFieldSetElement> => {
+    return event => {
+        const { checked, value } = event.target as any
+        if (checked) setState(selected => [...selected, value])
+        else setState(selected => selected.filter(v => v !== value))
+    }
 }
 
 export const Table: FunctionComponent = () => {
@@ -44,6 +40,7 @@ export const Table: FunctionComponent = () => {
     const [page, setPage] = useQuery<number>('page', QueryTypes.Number)
     const [size, setSize] = useQuery<number>('size', QueryTypes.Number)
 
+    const [open, setOpen] = useState<boolean>(false)
     const [sort, setSort] = useState<Sort>({
         name: TableColumns.CODE,
         direction: 1
@@ -58,16 +55,19 @@ export const Table: FunctionComponent = () => {
 
     const filteredByName = useMemo(() => {
         return state.list.filter(country => country.name.toLowerCase().includes(name.toLowerCase()))
-    }, [state, name, selectedRegions, selectedSubRegions])
+    }, [state, name])
 
     const filtered = useMemo(() => {
-        return state.list.filter(country => {
-            if (!country.name.toLowerCase().includes(name.toLowerCase())) return false
-            if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
-            if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
-            return true
-        })
-    }, [state, name, selectedRegions, selectedSubRegions])
+        return getSortedList(
+            filteredByName.filter(country => {
+                if (selectedRegions.length && !selectedRegions.includes(country.region)) return false
+                if (selectedSubRegions.length && !selectedSubRegions.includes(country.subregion)) return false
+                return true
+            }),
+            sort.name,
+            sort.direction
+        )
+    }, [filteredByName, selectedRegions, selectedSubRegions, sort])
 
     const [regions, subRegions] = useMemo(() => getRegionSubRegionMaps(state.list), [state])
     const [filteredRegions, filteredSubRegions] = useMemo(
@@ -76,35 +76,16 @@ export const Table: FunctionComponent = () => {
     )
 
     const totalCount = filtered.length
+    const sorted = filtered.slice((page - 1) * size, (page - 1) * size + size)
 
-    const sorted = useMemo(() => {
-        const sorted = filtered.sort((a, b) => {
-            switch (sort.name) {
-                case TableColumns.CAPITAL:
-                    if (!a.capitalName) return 1
-                    if (!b.capitalName) return -1
-                    return a.capitalName.localeCompare(b.capitalName) * sort.direction
-                case TableColumns.POPULATION:
-                    if (!a.population) return 1
-                    if (!b.population) return -1
-                    return (a.population - b.population) * sort.direction
-                default:
-                    if (!a[sort.name]) return 1
-                    if (!b[sort.name]) return -1
-                    return a[sort.name].localeCompare(b[sort.name]) * sort.direction
-            }
-        })
-        return sorted.slice((page - 1) * size, (page - 1) * size + size)
-    }, [page, size, sort, filtered])
-
-    const sortChangeHandler = useCallback<MouseEventHandler<HTMLButtonElement>>(e => {
+    const sortChangeHandler: MouseEventHandler<HTMLButtonElement> = e => {
         const name = e.currentTarget.dataset.sort as TableColumns
         tableTop.current = tableRef.current.scrollTop
         setSort(s => ({
             name,
             direction: name === s.name ? (-s.direction as -1 | 1) : 1
         }))
-    }, [])
+    }
 
     const getCountriesData = useCallback(() => {
         const start = Date.now()
@@ -135,8 +116,6 @@ export const Table: FunctionComponent = () => {
 
     useEffect(getCountriesData, [getCountriesData])
 
-    const [vissible, setVissible] = useState(false)
-
     return (
         <>
             <ErrorPopup error={state.error} onClick={getCountriesData} />
@@ -144,7 +123,7 @@ export const Table: FunctionComponent = () => {
                 <div className={`table__x-scroll-container${state.list.length ? '' : ' loading'}`} ref={tableRef}>
                     <TableHeader
                         onSort={sortChangeHandler}
-                        onFilterOpen={() => setVissible(true)}
+                        onFilterOpen={() => setOpen(true)}
                         sort={sort}
                         hasActiveFilters={!!name || !!selectedRegions.length || !!selectedSubRegions.length}
                     />
@@ -152,9 +131,9 @@ export const Table: FunctionComponent = () => {
                     <TableFooter totalCount={totalCount} />
                 </div>
             </div>
-            {vissible && (
+            {open && (
                 <>
-                    <div className='filters__helper' onClick={() => setVissible(false)} />
+                    <div className='filters__helper' onClick={() => setOpen(false)} />
                     <div className='filters__container'>
                         <div className='filters__name'>
                             <label className='filters__label' htmlFor='filter-name'>
@@ -166,17 +145,13 @@ export const Table: FunctionComponent = () => {
                                 name='filter name'
                                 placeholder='Enter keyword to filter results'
                                 value={name}
-                                onChange={e => setName(e.target.value.trim())}
+                                onChange={event => setName(event.target.value.trim())}
                             />
                         </div>
                         <MultipleSelect
                             value={selectedRegions}
                             onClear={() => setSelectedRegions([])}
-                            onChange={e => {
-                                const { checked, value } = e.target as any
-                                if (checked) setSelectedRegions(r => [...r, value])
-                                else setSelectedRegions(r => r.filter(v => v !== value))
-                            }}
+                            onChange={multiSelectChangeHandlerGenerator(setSelectedRegions)}
                             name='Regions'
                             full={regions}
                             filtered={filteredRegions}
@@ -184,11 +159,7 @@ export const Table: FunctionComponent = () => {
                         <MultipleSelect
                             value={selectedSubRegions}
                             onClear={() => setSelectedSubRegions([])}
-                            onChange={e => {
-                                const { checked, value } = e.target as any
-                                if (checked) setSelectedSubRegions(r => [...r, value])
-                                else setSelectedSubRegions(r => r.filter(v => v !== value))
-                            }}
+                            onChange={multiSelectChangeHandlerGenerator(setSelectedSubRegions)}
                             name='Subregions'
                             full={subRegions}
                             filtered={filteredSubRegions}

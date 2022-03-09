@@ -46,7 +46,7 @@ export const Search: FunctionComponent = () => {
                     onBlur={() => setTimeout(() => setVisible(false), 100)}
                     onChange={event => setValue(event.target.value.trim())}
                 />
-                {visible && (state.list.length || state.error) && (
+                {visible && (
                     <button onClick={() => setVisible(false)} className='search__close-btn'>
                         <IoMdClose />
                     </button>

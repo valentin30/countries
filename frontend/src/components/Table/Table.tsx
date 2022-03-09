@@ -53,7 +53,6 @@ export const Table: FunctionComponent = () => {
     const filteredByName = useMemo(() => {
         return state.list.filter(country => country.name.toLowerCase().includes(name.toLowerCase()))
     }, [state, name])
-
     const filtered = useMemo(
         () =>
             filteredByName.filter(country => {
@@ -63,18 +62,16 @@ export const Table: FunctionComponent = () => {
             }),
         [filteredByName, selectedRegions, selectedSubRegions]
     )
-
     const [regions, subRegions] = useMemo(() => getRegionSubRegionMaps(state.list), [state])
     const [filteredRegions, filteredSubRegions] = useMemo(
         () => getRegionSubRegionMaps(filteredByName),
         [filteredByName]
     )
-
-    const totalCount = filtered.length
     const sorted = useMemo(
-        () => getSortedList(filtered.slice((page - 1) * size, (page - 1) * size + size), sort.name, sort.direction),
+        () => getSortedList(filtered, sort.name, sort.direction).slice((page - 1) * size, (page - 1) * size + size),
         [filtered, sort, page, size]
     )
+    const totalCount = filtered.length
 
     const sortChangeHandler: MouseEventHandler<HTMLButtonElement> = e => {
         const name = e.currentTarget.dataset.sort as TableColumns
@@ -139,6 +136,7 @@ export const Table: FunctionComponent = () => {
                 selectedSubRegions={selectedSubRegions}
                 filteredSubRegions={filteredSubRegions}
                 onClose={() => setOpen(false)}
+                onFilterNameClear={() => setName('')}
                 onRegionsClear={() => setSelectedRegions([])}
                 onSubRegionsClear={() => setSelectedSubRegions([])}
                 onFilterNameChange={event => setName(event.target.value.trim())}

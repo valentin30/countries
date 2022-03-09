@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { IoMdClose } from 'react-icons/io'
 import { IoSearch } from 'react-icons/io5'
 import { CountryContext } from '../../context/country/CountryContext'
 import * as CountriesService from '../../services/CountryService'
@@ -45,6 +46,11 @@ export const Search: FunctionComponent = () => {
                     onBlur={() => setTimeout(() => setVisible(false), 100)}
                     onChange={event => setValue(event.target.value.trim())}
                 />
+                {visible && (state.list.length || state.error) && (
+                    <button onClick={() => setVisible(false)} className='search__close-btn'>
+                        <IoMdClose />
+                    </button>
+                )}
                 {state.loading && <AiOutlineLoading3Quarters className='search__loading' />}
             </div>
             {visible && (

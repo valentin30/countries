@@ -7,6 +7,7 @@ interface Props {
 
     onClose: () => void
     filterName: string
+    onFilterNameClear: () => void
     onFilterNameChange: ChangeEventHandler<HTMLInputElement>
 
     selectedRegions: string[]
@@ -29,9 +30,14 @@ export const Filters: FunctionComponent<Props> = props => {
             <div className='filters__helper' onClick={props.onClose} />
             <div className='filters__container'>
                 <div className='filters__name'>
-                    <label className='filters__label' htmlFor='filter-name'>
-                        Name
-                    </label>
+                    <div className='filters__header'>
+                        <label className='filters__label' htmlFor='filter-name'>
+                            Name
+                        </label>
+                        <button onClick={props.onFilterNameClear} className='filters__clear'>
+                            Clear
+                        </button>
+                    </div>
                     <input
                         id='filter-name'
                         type='text'

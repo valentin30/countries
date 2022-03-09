@@ -3,6 +3,7 @@ import { Country } from '../../dto/Country'
 import { TableColumsArray, TableColumns } from '../../utils/constants'
 import { Loader } from '../Loader'
 import { TableCell } from './TableCell'
+import { getReadableNumber } from '../../utils/functions'
 
 export const LoadingTableRow: FunctionComponent = () => {
     return (
@@ -23,13 +24,7 @@ interface TableRowProps {
 }
 
 export const TableRowComponent: FunctionComponent<TableRowProps> = props => {
-    const population = props.country.population
-        ? props.country.population
-              .toString()
-              .split('')
-              .reverse()
-              .reduce((num, ch, i) => ((i + 1) % 3 === 0 ? ' ' : '') + (ch + num), '')
-        : 'n/a'
+    const population = getReadableNumber(props.country.population)
     return (
         <div
             data-code={props.country.code}

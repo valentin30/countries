@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { Country } from '../../dto/Country'
+import { getReadableNumber } from '../../utils/functions'
 
 interface Props {
     country: Country
@@ -24,11 +25,11 @@ export const Detail: FunctionComponent<Props> = props => {
                 <ul className='detail-view__details'>
                     <li className='detail-view__list-item'>
                         <p className='detail-view__property-name'>Capital:</p>
-                        <p className='detail-view__property-value'>{props.country.capitalName}</p>
+                        <p className='detail-view__property-value'>{props.country.capitalName || 'n/a'}</p>
                     </li>
                     <li className='detail-view__list-item'>
                         <p className='detail-view__property-name'>Population: </p>
-                        <p className='detail-view__property-value'>{props.country.population}</p>
+                        <p className='detail-view__property-value'>{getReadableNumber(props.country.population)}</p>
                     </li>
                     <li className='detail-view__list-item'>
                         <p className='detail-view__property-name'>Region: </p>

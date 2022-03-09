@@ -42,3 +42,12 @@ export const getRegionSubRegionMaps = (list: Country[]): [Map, Map] => {
 }
 
 export const isMobile = () => 'ontouchstart' in document.documentElement
+
+export const getReadableNumber = (number: number) => {
+    if (!number) return 'n/a'
+    return number
+        .toString()
+        .split('')
+        .reverse()
+        .reduce((num, ch, i) => ((i + 1) % 3 === 0 ? ' ' : '') + (ch + num), '')
+}

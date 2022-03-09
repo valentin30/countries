@@ -20,8 +20,8 @@
 
     &__input {
         width: 100%;
-        padding: 1rem 1rem 1rem 2.75rem;
-        font-size: 1.25rem;
+        padding: 1.1rem 1rem 1rem 3.25rem;
+        font-size: 1.2rem;
         background-color: var(--background-color);
         outline: none;
         border: none;
@@ -38,6 +38,10 @@
         left: 0.9rem;
         font-size: 1.75rem;
         color: var(--accent-color);
+    }
+
+    &__close-btn {
+        display: none;
     }
 
     &__loading {
@@ -115,7 +119,7 @@
 
 @media (max-width: 1000px) {
     .search {
-        top: 0.5rem;
+        top: 0.35rem;
         &__container {
             width: calc(100% - 4rem);
             left: 1px;
@@ -123,6 +127,26 @@
 
         &__input {
             font-size: 1rem;
+        }
+
+        &__close-btn {
+            display: block;
+            position: fixed;
+            z-index: var(--search-result-z-index);
+
+            padding: 0.5rem;
+            top: 0.35rem;
+            right: 0.5rem;
+            background-color: var(--background-color-secondary);
+            color: var(--accent-color);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+
+            & svg {
+                margin-top: 0.2rem;
+                font-size: 2rem;
+            }
         }
 
         &__results-list {
